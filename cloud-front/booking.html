@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking - Cloud E-Ticketing</title>
+    <link rel="stylesheet" href="booking.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">E-Ticketing</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search Buses</a></li>
+                <li><a href="booking.html">Booking</a></li>
+                <li><a href="payment.html">Payment</a></li>
+                <li><a href="history.html">Booking History</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="booking-container">
+        <h1>Select Your Bus & Seats</h1>
+        <div class="bus-options">
+            <select>
+                <option>Select Bus</option>
+                <option>Express Bus - ₹500</option>
+                <option>Luxury Bus - ₹800</option>
+                <option>AC Sleeper - ₹1200</option>
+            </select>
+            <button class="proceed-btn" onclick="redirectToPayment()">Proceed to Payment</button>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Cloud E-Ticketing System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+<script>
+    function redirectToPayment() {
+        const busSelection = document.querySelector("select").value;
+        
+        if (busSelection === "Select Bus") {
+            alert("Please select a bus before proceeding to payment.");
+        } else {
+            window.location.href = "payment.html";
+        }
+    }
+</script>

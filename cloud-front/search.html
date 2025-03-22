@@ -1,0 +1,37 @@
+<form id="searchForm">
+    <input type="text" id="from" placeholder="From" required>
+    <input type="text" id="to" placeholder="To" required>
+    <input type="date" id="date" required>
+    <button type="submit">Search</button>
+</form>
+<div id="results"></div>
+<head><link rel="stylesheet" href="search.css"/>
+</head>
+<script>
+document.getElementById("searchForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const date = document.getElementById("date").value;
+
+    fetch("/api/search-buses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ from, to, date }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        let output = "<h3>Available Buses</h3>";
+        if (data.length > 0) {
+            data.forEach(bus => {
+                output += `<p>${bus.name} - ₹${bus.price}</p>`;
+            });
+        } else {
+            output += "<p>No buses found.</p>";
+        }
+        document.getElementById("results").innerHTML = output;
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>

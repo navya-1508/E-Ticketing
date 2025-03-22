@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background: #f4f4f4;
+    color: #333;
+}
+
+/* Navigation */
+header {
+    background: #007bff;
+    padding: 15px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+nav .logo {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.btn {
+    background: white;
+    color: #007bff;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Main Content (Full Height) */
+.main-container {
+    flex: 1; /* Takes up available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Search Section */
+.search-container {
+    text-align: center;
+    width: 100%;
+    padding: 50px 20px;
+}
+
+.search-form input, .search-form button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-form button {
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+/* Bus List */
+.bus-list {
+    margin-top: 20px;
+}
+
+.bus-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.bus-list ul li {
+    padding: 10px;
+    background: white;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background: #222;
+    color: white;
+    width: 100%;
+    margin-top: auto; /* Pushes footer to bottom */
+}
