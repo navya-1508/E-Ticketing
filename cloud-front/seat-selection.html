@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Seat Selection</h2>
+    <div id="busDetails"></div>
+    <h3>Select Your Seats:</h3>
+    
+    <div id="busContainer">
+        <div class="driver">🧑‍✈️ Driver</div>
+        <div id="seatsContainer"></div>
+    </div>
+
+    <p><strong>Total Amount:</strong> ₹<span id="totalAmount">0</span></p>
+    <button id="proceedToPayment">Proceed to Payment</button>
+
+    <script>
+        // Retrieve selected bus details
+        const selectedBus = JSON.parse(localStorage.getItem("selectedBus"));
+        if (!selectedBus) {
+            alert("No bus selected! Redirecting...");
+            window.location.href = "search.html";
+        }
+
+        // Display selected bus info
+        document.getElementById("busDetails").innerHTML = `<p><strong>Bus:</strong> ${selectedBus.name} | <strong>Price:</strong> ₹${selectedBus.price} per seat</p>`;
+
+        // Generate seats dynamically
+        const seatsContainer = document.getElementById("seatsContainer");
+        let selectedSeats = [];
+        const totalSeats = 30;
+        const seatsPerRow = 4;
+        const seatPrice = selectedBus.price; // Bus ticket price
+
+        function updateTotalAmount() {
+            document.getElementById("totalAmount").innerText = selectedSeats.length * seatPrice;
+        }
+
+        for (let i = 1; i <= totalSeats; i++) {
+            let seat = document.createElement("button");
+            seat.innerText = i;
+            seat.className = "seat";
+            seat.onclick = function () {
+                if (selectedSeats.includes(i)) {
+                    selectedSeats = selectedSeats.filter(s => s !== i);
+                    seat.classList.remove("selected");
+                } else {
+                    selectedSeats.push(i);
+                    seat.classList.add("selected");
+                }
+                updateTotalAmount(); // Update amount when seats are selected/deselected
+            };
+
+            seatsContainer.appendChild(seat);
+
+            // Create aisle space after 2 seats
+            if (i % seatsPerRow === 2) {
+                let aisle = document.createElement("div");
+                aisle.className = "aisle";
+                seatsContainer.appendChild(aisle);
+            }
+        }
+
+        // Proceed to payment (Show dialog box)
+        document.getElementById("proceedToPayment").addEventListener("click", function () {
+            if (selectedSeats.length === 0) {
+                alert("Please select at least one seat!");
+                return;
+            }
+
+            const totalAmount = selectedSeats.length * seatPrice;
+
+            const confirmPayment = confirm(`You have selected ${selectedSeats.length} seats.\nTotal Amount: ₹${totalAmount}\nProceed to Payment?`);
+            if (confirmPayment) {
+                localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+                localStorage.setItem("totalAmount", totalAmount);
+                window.location.href = "payment.html";
+            }
+        });
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #busContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid black;
+            width: 250px;
+            margin: auto;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+        }
+        .driver {
+            background: gray;
+            color: white;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #seatsContainer {
+            display: grid;
+            grid-template-columns: repeat(5, 40px); /* 4 seats + 1 aisle */
+            gap: 10px;
+            justify-content: center;
+        }
+        .seat {
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            border: 1px solid #333;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .selected {
+            background-color: green;
+            color: white;
+        }
+        .aisle {
+            width: 20px; /* Space between seats */
+        }
+        #proceedToPayment {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</body>
+</html>

@@ -22,9 +22,15 @@
 
     <section class="payment-container">
         <h1>Complete Your Payment</h1>
-        <form>
-            <label for="card">Card Number</label>
-            <input type="text" id="card" placeholder="Enter card number" required>
+        <p><strong>Selected Seats:</strong> <span id="selectedSeats"></span></p>
+        <p><strong>Total Amount:</strong> ₹<span id="totalAmount"></span></p>
+
+        <form id="paymentForm">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+
+            <label for="expiryDate">Expiry Date</label>
+            <input type="month" id="expiryDate" required>
 
             <label for="cvv">CVV</label>
             <input type="text" id="cvv" placeholder="123" required>
@@ -36,5 +42,60 @@
     <footer>
         <p>© 2025 Cloud E-Ticketing System. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Retrieve stored data
+        const selectedSeats = localStorage.getItem("selectedSeats") || "None";
+        const totalAmount = localStorage.getItem("totalAmount") || "0";
+        document.getElementById("selectedSeats").innerText = selectedSeats;
+        document.getElementById("totalAmount").innerText = totalAmount;
+
+        // Payment Form Validation
+        document.getElementById("paymentForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const cardNumber = document.getElementById("cardNumber").value;
+            const expiryDate = document.getElementById("expiryDate").value;
+            const cvv = document.getElementById("cvv").value;
+
+            if (!validateCard(cardNumber, expiryDate, cvv)) {
+                alert("❌ Invalid card details. Please check again.");
+                return;
+            }
+
+            // Show confirmation popup
+            if (confirm(`Confirm payment of ₹${totalAmount}?`)) {
+                storePayment();  // Save transaction
+            }
+        });
+
+        // Simple Card Validation
+        function validateCard(card, expiry, cvv) {
+            const cardRegex = /^[0-9]{16}$/;
+            const cvvRegex = /^[0-9]{3}$/;
+            return cardRegex.test(card) && cvvRegex.test(cvv) && new Date(expiry) > new Date();
+        }
+
+        // Store Payment in AWS DynamoDB (Fake API for now)
+        function storePayment() {
+            fetch("https://your-api-endpoint.amazonaws.com/store-payment", {  // 🔹 Replace with AWS Lambda URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    paymentId: `PAY-${Date.now()}`,
+                    amount: totalAmount,
+                    seats: selectedSeats,
+                    date: new Date().toISOString()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("✅ Payment Successful! Your ticket is booked.");
+                localStorage.clear();
+                window.location.href = "confirmation.html";
+            })
+            .catch(error => console.error("❌ Error Saving Payment:", error));
+        }
+    </script>
 </body>
 </html>

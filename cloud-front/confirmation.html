@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Cloud E-Ticketing</title>
+    <link rel="stylesheet" href="confirmation.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">E-Ticketing</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search Buses</a></li>
+                <li><a href="booking.html">Booking</a></li>
+                <li><a href="payment.html">Payment</a></li>
+                <li><a href="history.html">Booking History</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation-container">
+        <h1>🎉 Booking Confirmed!</h1>
+        <p><strong>Payment ID:</strong> <span id="paymentId"></span></p>
+        <p><strong>Seats:</strong> <span id="selectedSeats"></span></p>
+        <p><strong>Total Amount:</strong> ₹<span id="totalAmount"></span></p>
+        <p><strong>Journey Date:</strong> <span id="journeyDate"></span></p>
+
+        <button onclick="downloadTicket()">📄 Download Ticket</button>
+        <button onclick="goToHistory()">📜 View Booking History</button>
+    </section>
+
+    <footer>
+        <p>© 2025 Cloud E-Ticketing System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Retrieve details from localStorage
+        document.getElementById("paymentId").innerText = localStorage.getItem("paymentId") || "N/A";
+        document.getElementById("selectedSeats").innerText = localStorage.getItem("selectedSeats") || "N/A";
+        document.getElementById("totalAmount").innerText = localStorage.getItem("totalAmount") || "0";
+        document.getElementById("journeyDate").innerText = localStorage.getItem("journeyDate") || "N/A";
+
+        // Function to download ticket as a text file
+        function downloadTicket() {
+            const ticketDetails = `
+                🎫 E-Ticket - Cloud E-Ticketing 🎫
+                ----------------------------------
+                🆔 Payment ID: ${localStorage.getItem("paymentId")}
+                🚌 Selected Seats: ${localStorage.getItem("selectedSeats")}
+                💰 Total Amount: ₹${localStorage.getItem("totalAmount")}
+                📅 Journey Date: ${localStorage.getItem("journeyDate")}
+                ----------------------------------
+                ✅ Thank you for booking with us!
+            `;
+
+            const blob = new Blob([ticketDetails], { type: "text/plain" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "E-Ticket.txt";
+            a.click();
+        }
+
+        // Redirect to booking history
+        function goToHistory() {
+            window.location.href = "history.html";
+        }
+    </script>
+</body>
+</html>

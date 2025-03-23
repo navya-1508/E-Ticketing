@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History - Cloud E-Ticketing</title>
+    <link rel="stylesheet" href="history.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">E-Ticketing</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search Buses</a></li>
+                <li><a href="booking.html">Booking</a></li>
+                <li><a href="payment.html">Payment</a></li>
+                <li><a href="history.html">Booking History</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="history-container">
+        <h1>📜 Booking History</h1>
+        <div id="historyList"></div>
+    </section>
+
+    <footer>
+        <p>© 2025 Cloud E-Ticketing System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function loadBookingHistory() {
+            const historyList = document.getElementById("historyList");
+            const history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+
+            if (history.length === 0) {
+                historyList.innerHTML = "<p>No booking history found.</p>";
+                return;
+            }
+
+            let output = "<ul>";
+            history.forEach((entry, index) => {
+                output += `
+                    <li>
+                        <strong>Booking ${index + 1}</strong> <br>
+                        🆔 Payment ID: ${entry.paymentId} <br>
+                        🚌 Seats: ${entry.selectedSeats} <br>
+                        💰 Amount Paid: ₹${entry.totalAmount} <br>
+                        📅 Date: ${entry.journeyDate}
+                        <hr>
+                    </li>
+                `;
+            });
+            output += "</ul>";
+            historyList.innerHTML = output;
+        }
+
+        // Load history on page load
+        window.onload = loadBookingHistory;
+    </script>
+</body>
+</html>

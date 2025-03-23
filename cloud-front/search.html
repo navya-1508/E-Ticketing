@@ -11,27 +11,54 @@
 document.getElementById("searchForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
-    const date = document.getElementById("date").value;
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    let date = document.getElementById("date").value;  // YYYY-MM-DD
 
-    fetch("/api/search-buses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ from, to, date }),
+    // Convert "YYYY-MM-DD" to "DD-MM-YYYY"
+    const [year, month, day] = date.split("-");
+    let formattedDate = date; // ✅ Keep it in YYYY-MM-DD
+
+
+    console.log("🔍 Sending Search Request:", { from, to, formattedDate });
+
+    fetch("http://localhost:5001/api/search-buses", {  // ✅ Use correct backend URL
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to, date: formattedDate }),
+})
+
+    .then((response) => {
+        console.log("🔄 API Response Received:", response);
+        return response.json();
     })
-    .then((response) => response.json())
     .then((data) => {
-        let output = "<h3>Available Buses</h3>";
-        if (data.length > 0) {
-            data.forEach(bus => {
-                output += `<p>${bus.name} - ₹${bus.price}</p>`;
-            });
-        } else {
-            output += "<p>No buses found.</p>";
-        }
-        document.getElementById("results").innerHTML = output;
-    })
-    .catch(error => console.error("Error:", error));
+    console.log("✅ Processed API Response:", data);
+
+    let output = "<h3>Available Buses</h3>";
+    if (data.length > 0) {
+        data.forEach(bus => {
+            output += `<div>
+                <p>${bus.name} - ₹${bus.price}</p>
+                <button onclick="selectBus(${bus.id}, '${bus.name}', ${bus.price})">Select</button>
+            </div>`;
+        });
+    } else {
+        output += "<p>No buses found.</p>";
+    }
+    document.getElementById("results").innerHTML = output;
+})
+
+    .catch(error => console.error("❌ Fetch Error:", error));
 });
+function selectBus(id, name, price) {
+    const selectedBus = { id, name, price };
+    
+    // Store selected bus in localStorage to access in seat selection
+    localStorage.setItem("selectedBus", JSON.stringify(selectedBus));
+    
+    // Redirect to seat selection page
+    window.location.href = "seat-selection.html";
+}
+
 </script>
